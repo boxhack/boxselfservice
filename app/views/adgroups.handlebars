@@ -1,0 +1,44 @@
+{{#if error}}
+  <div class="alert alert-danger" role="alert">
+    <strong>{{error}}</strong>
+    {{#if errorDetails}}
+      <div>{{errorDetails}}</div>
+    {{/if}}
+  </div>
+{{/if}}
+
+
+<div>
+  <form action="/adgroups" method="post">   
+    <label for="folder_name">AD Group or Distribution List to sync (for multiple groups, enter comma delimited list)</label>
+    <input class="form-control" type="text"  name="group_name">
+    <div>&nbsp;</div>
+    <button type="submit" class="btn btn-md btn-primary">Add</button>
+
+  </form>
+</div>
+
+<div>&nbsp;</div>
+
+<div>
+  <table id="adgroups" class="display" cellspacing="0" width="100%">
+    <thead>
+    <tr>
+      <th>AD Group Name</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each groups as |group|}}
+      <tr>
+        <td><a href="/groupmembers/{{minusDomain group.groupName}}">{{minusDomain group.groupName}}</a></td>
+        <td>{{group.status}}</td>
+        <td><a href="/deleteadgroups?id={{group._self}}" class="btn btn-primary">Remove</a></td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</div>
+
+

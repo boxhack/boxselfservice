@@ -1,0 +1,53 @@
+{{#if error}}
+  <div class="alert alert-danger" role="alert">
+    <strong>{{error}}</strong>
+    {{#if errorDetails}}
+      <div>{{errorDetails}}</div>
+    {{/if}}
+  </div>
+{{/if}}
+
+
+<div>
+  <form action="/createfolders" method="post">
+    <label for="folder_name">Parent Folder Name</label>
+    <input class="form-control" type="text" value="{{root.0.name}}" disabled="true" name="parent_folder_name">
+    <input class="form-control" type="hidden" value="{{root.0.id}}" name="parent_folder_id">
+    <input class="form-control" type="hidden" value="{{root.0.login}}" name="parent_folder_owner">
+
+    <label for="folder_name">New Folder Name</label>
+    <input class="form-control" type="text"  name="folder_name">
+    <label for="co_owner1">co-owner (email)</label>
+    <input class="form-control" type="text"  name="co_owner1">
+    <label for="co_owner2">co-owner (email)</label>
+    <input class="form-control" type="text"  name="co_owner2">
+    <div>&nbsp;</div>
+    <button type="submit" class="btn btn-md btn-primary">Create</button>
+
+  </form>
+</div>
+
+<div>&nbsp;</div>
+
+<div>
+  <table id="example" class="display" cellspacing="0" width="100%">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Id</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each files as |file|}}
+      <tr>
+        <td>{{file.name}}</td>
+        <td><span class="glyphicon glyphicon-folder-open"></span></td>
+        <td>{{file.id}}</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</div>
+
+

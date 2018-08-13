@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Box Self-Service App</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css">
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="css/heroic-features.css" rel="stylesheet">
+  <!--<link href="css/bootstrap.css" rel="stylesheet">-->
+
+  <style>
+    body {
+      padding-top: 140px;
+      box-sizing: none;
+    }
+
+    .loader {
+      border: 16px solid #f3f3f3;
+      /* Light grey */
+      border-top: 16px solid #3498db;
+      /* Blue */
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+
+          <a href="/landingpage" class="navbar-brand">Box Self-Service App</a>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          </div>
+          <div class="navbar-nav">
+
+          </div>
+        </div>
+
+        <div class="navbar-collapse">
+          <div class="navbar-right">
+            {{#if email}}
+            <p class="navbar-text">{{email}}</p>
+            <a href="https://login.microsoftonline.com/logout.srf" class="btn btn-sm btn-danger">Log Out</a>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+    <div class="container">
+      {{{body}}}
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"> </script>
+  <script src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"> </script>
+  <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.flash.min.js"> </script>
+  <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.flash.min.js"> </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"> </script>
+  <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"> </script>
+  <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"> </script>
+  <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"> </script>
+  <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.print.min.js"> </script>
+
+  <script>
+
+    $('#example').DataTable();
+
+
+    $("#devicepins tbody").on("click", ".info-button", function () {
+      var id = $(this).attr('data-whatever');
+
+      $.ajax({
+        url: 'deviceinfo',
+        type: 'GET',
+        data: { id: id },
+        success: function (json) {
+          $('.modal-title').text(json["owned_by"]["login"])
+
+          var html = "<label>owned_by:</label> " + json["owned_by"]["name"] + "</br>" +
+            "<label>created_at:</label> " + json["created_at"] + "</br>";
+          $('.modal-body').html(html)
+        },
+        error: function (e) {
+          alert(e);
+        }
+      });
+    });
+
+
+
+    $("#deletedusers tbody").on("click", ".info-button", function () {
+      var id = $(this).attr('data-whatever');
+
+      $.ajax({
+        url: 'deleteduserinfo',
+        type: 'GET',
+        data: { id: id },
+        success: function (json) {
+          $('.modal-title').text(json["email"])
+
+          var html = "<label>owned_by:</label> " + json["name"] + "</br>" +
+            "<label>created_at:</label> " + json["date"] + "</br>";
+          $('.modal-body').html(html)
+        },
+        error: function (e) {
+          alert(e);
+        }
+      });
+    });
+
+    $("#inactiveusers tbody").on("click", ".info-button", function () {
+      var id = $(this).attr('data-whatever');
+
+      $.ajax({
+        url: 'inactiveuserinfo',
+        type: 'GET',
+        data: { id: id },
+        success: function (json) {
+          $('.modal-title').text(json["email"])
+
+          var html = "<label>owned_by:</label> " + json["name"] + "</br>" +
+            "<label>created_at:</label> " + json["date"] + "</br>";
+          $('.modal-body').html(html)
+        },
+        error: function (e) {
+          alert(e);
+        }
+      });
+    });
+
+    var table2 = $('#transfercontent').DataTable({
+      order: [0, 'desc']
+    });
+
+    var table3 = $('#adgroups').DataTable({
+      order: [1, 'desc']
+    });
+
+    var table4 = $('#logs').DataTable({
+      order: [0, 'desc']
+    });
+
+    var table5 = $('#undeprov').DataTable({
+      order: [0, 'desc']
+    });
+
+    var table6 = $('#collaborators').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+        'csv', 'excel', 'pdf'
+      ],
+      order: [0, 'desc'],
+      "columnDefs": [
+        {
+          "targets": [0],
+          "visible": false
+        },
+        {
+          "targets": [1],
+          "visible": false
+        },
+        {
+          "targets": [2],
+          "visible": false
+        },
+        {
+          "targets": [3],
+          "visible": false
+        },
+        {
+          "targets": [4],
+          "visible": false
+        },
+        {
+          "targets": [5],
+          "visible": false
+        },
+
+        {
+          "targets": [11],
+          "visible": false
+        },
+        {
+          "targets": [12],
+          "visible": false
+        },
+        {
+          "targets": [13],
+          "visible": false
+        },
+      ]
+    });
+
+    var table7 = $('#bulkdelete').DataTable({
+      order: [0, 'desc']
+    });
+
+    var table8 = $('#searchcontent').DataTable({
+      order: [0, 'desc']
+    });
+
+    var table9 = $('#deletedusers').DataTable({
+      order: [0, 'desc']
+    });
+
+    var table10 = $('#inactiveusers').DataTable({
+      order: [1, 'desc']
+    });
+
+
+
+
+    $(document).ready(function () {
+
+      var scroll = false;
+      var launcherMaxHeight = 396;
+      var launcherMinHeight = 296;
+
+      // Mousewheel event handler to detect whether user has scrolled over the container
+      $('.apps').bind('mousewheel', function (e) {
+        if (e.originalEvent.wheelDelta / 120 > 0) {
+          // <a href="http://www.jqueryscript.net/tags.php?/Scroll/">Scroll</a>ing up
+        }
+        else {
+          // Scrolling down
+          if (!scroll) {
+            $(".second-set").show();
+            $('.apps').css({ height: launcherMinHeight }).addClass('overflow');
+            scroll = true;
+            $(this).scrollTop(e.originalEvent.wheelDelta);
+          }
+        }
+      });
+
+      // Scroll event to detect that scrollbar reached top of the container
+      $('.apps').scroll(function () {
+        var pos = $(this).scrollTop();
+        if (pos == 0) {
+          scroll = false;
+          $('.apps').css({ height: launcherMaxHeight }).removeClass('overflow');
+          $(".second-set").hide();
+        }
+      });
+
+      // Click event handler to show more apps
+      $('.apps .more').click(function () {
+        $(".second-set").show();
+        $(".apps").animate({ scrollTop: $('.apps')[0].scrollHeight }).css({ height: 500 }).addClass('overflow');
+      });
+
+      // Click event handler to toggle dropdown
+      $(".button").click(function (event) {
+        event.stopPropagation();
+        $(".app-launcher").toggle();
+      });
+
+      $(document).click(function () {
+        //Hide the launcher if visible
+        $('.app-launcher').hide();
+      });
+
+      // Prevent hiding on click inside app launcher
+      $('.app-launcher').click(function (event) {
+        event.stopPropagation();
+      });
+
+    });
+
+    // Resize event handler to maintain the max-height of the app launcher
+    $(window).resize(function () {
+      $('.apps').css({ maxHeight: $(window).height() - $('.apps').offset().top });
+    });
+
+    $('.app-launcher').hide();
+
+    $("#example tbody").on("click", ".info-button", function () {
+      var id = $(this).attr('data-whatever');
+
+      $.ajax({
+        url: 'retentioninfo',
+        type: 'GET',
+        data: { id: id },
+        success: function (json) {
+          $('.modal-title').text(json["name"])
+          var html = "<label>Policy:</label> " + json["policy"] + "</br>" + 
+          "<label>Owner:</label> " + json["owner"]["login"] + "</br>" + 
+          "<label>Folder ID:</label> " + id + "</br>";
+          $('.modal-body').html(html)
+          $('#folderId').val(id);
+        },
+        error: function (e) {
+          alert("error: " + e);
+        }
+      });
+    });
+
+    $("#updateTo10").on("click", function () {
+      console.log("save clicked: " + $("#folderId").val())
+
+       $.ajax({
+        url: 'retentionupdate',
+        type: 'POST',
+        data: { id: $("#folderId").val() },
+        success: function (json) {
+          
+          console.log(json)
+        },
+        error: function (e) {
+          alert("error: " + e);
+        }
+      });
+    });
+
+
+  </script>
+
+</body>
+
+</html>
