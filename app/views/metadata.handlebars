@@ -1,0 +1,42 @@
+{{#if error}}
+  <div class="alert alert-danger" role="alert">
+    <strong>{{error}}</strong>
+    {{#if errorDetails}}
+      <div>{{errorDetails}}</div>
+    {{/if}}
+  </div>
+{{/if}}
+
+
+<div>
+  <h2>Metadata Templates</h2> <button type="button" class="btn btn-primary btn-default info-button" style="float:right">Create New</button>
+</div>
+<div style="margin-top:60px">
+  <table id="metadata" class="display" cellspacing="0" width="100%">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th># of Visible Attributes</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each templates as | template |}}
+      <tr>
+        <td>{{template.displayName}}</td>
+        <td>{{template.fields.length}}</td>
+        
+        <td>
+          {{#if template.hidden}}
+          Visible
+          {{else}}
+          Hidden
+          {{/if}}
+          </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</div>
+
+

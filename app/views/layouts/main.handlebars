@@ -91,153 +91,11 @@
 
   <script>
 
-    $('#example').DataTable();
+    $('#retention').DataTable();
 
-
-    $("#devicepins tbody").on("click", ".info-button", function () {
-      var id = $(this).attr('data-whatever');
-
-      $.ajax({
-        url: 'deviceinfo',
-        type: 'GET',
-        data: { id: id },
-        success: function (json) {
-          $('.modal-title').text(json["owned_by"]["login"])
-
-          var html = "<label>owned_by:</label> " + json["owned_by"]["name"] + "</br>" +
-            "<label>created_at:</label> " + json["created_at"] + "</br>";
-          $('.modal-body').html(html)
-        },
-        error: function (e) {
-          alert(e);
-        }
-      });
-    });
-
-
-
-    $("#deletedusers tbody").on("click", ".info-button", function () {
-      var id = $(this).attr('data-whatever');
-
-      $.ajax({
-        url: 'deleteduserinfo',
-        type: 'GET',
-        data: { id: id },
-        success: function (json) {
-          $('.modal-title').text(json["email"])
-
-          var html = "<label>owned_by:</label> " + json["name"] + "</br>" +
-            "<label>created_at:</label> " + json["date"] + "</br>";
-          $('.modal-body').html(html)
-        },
-        error: function (e) {
-          alert(e);
-        }
-      });
-    });
-
-    $("#inactiveusers tbody").on("click", ".info-button", function () {
-      var id = $(this).attr('data-whatever');
-
-      
-
-      $.ajax({
-        url: 'inactiveuserinfo',
-        type: 'GET',
-        data: { id: id },
-        success: function (json) {
-          $('.modal-title').text(json["email"])
-
-          var html = "<label>owned_by:</label> " + json["name"] + "</br>" +
-            "<label>created_at:</label> " + json["date"] + "</br>";
-          $('.modal-body').html(html)
-        },
-        error: function (e) {
-          alert(e);
-        }
-      });
-    });
-
-    var table2 = $('#transfercontent').DataTable({
+    $('#metadata').DataTable({
       order: [0, 'desc']
     });
-
-    var table3 = $('#adgroups').DataTable({
-      order: [1, 'desc']
-    });
-
-    var table4 = $('#logs').DataTable({
-      order: [0, 'desc']
-    });
-
-    var table5 = $('#undeprov').DataTable({
-      order: [0, 'desc']
-    });
-
-    var table6 = $('#collaborators').DataTable({
-      dom: 'Bfrtip',
-      buttons: [
-        'csv', 'excel', 'pdf'
-      ],
-      order: [0, 'desc'],
-      "columnDefs": [
-        {
-          "targets": [0],
-          "visible": false
-        },
-        {
-          "targets": [1],
-          "visible": false
-        },
-        {
-          "targets": [2],
-          "visible": false
-        },
-        {
-          "targets": [3],
-          "visible": false
-        },
-        {
-          "targets": [4],
-          "visible": false
-        },
-        {
-          "targets": [5],
-          "visible": false
-        },
-
-        {
-          "targets": [11],
-          "visible": false
-        },
-        {
-          "targets": [12],
-          "visible": false
-        },
-        {
-          "targets": [13],
-          "visible": false
-        },
-      ]
-    });
-
-    var table7 = $('#bulkdelete').DataTable({
-      order: [0, 'desc']
-    });
-
-    var table8 = $('#searchcontent').DataTable({
-      order: [0, 'desc']
-    });
-
-    var table9 = $('#deletedusers').DataTable({
-      order: [0, 'desc']
-    });
-
-    var table10 = $('#inactiveusers').DataTable({
-      order: [1, 'desc']
-    });
-
-
 
 
     $(document).ready(function () {
@@ -303,7 +161,7 @@
 
     $('.app-launcher').hide();
 
-    $("#example tbody").on("click", ".info-button", function () {
+    $("#retention tbody").on("click", ".info-button", function () {
       var id = $(this).attr('data-whatever');
 
       $('.modal-title').text("...")

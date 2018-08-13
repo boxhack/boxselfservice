@@ -92,58 +92,7 @@ router.get('/retention', ensureAuthenticated, (req, res) => {
           var result = flattenListForFolders(list)
           var count = 0;
 
-          /** 
-          async.whilst(
-            function () {
-              return count < result.length;
-            },
-            function (loopCallback) {
-
-              async.waterfall([
-
-                function (callback) {
-                  console.log("getFile: " + result[count].id)
-                  userAPIClient.folders.get(result[count].id)
-                  .then(folder => {
-                      result[count].owned_by = folder.owned_by;
-                      callback(null)
-                  })
-                },
-                function (callback) {
-                  console.log("check 10 Year")
-                  userAPIClient.folders.getMetadata(result[count].id, appjs.adminAPIClient.metadata.scopes.ENTERPRISE, 'retentionExistingContent2')
-                    .then(metadata => {
-                      callback(null, '10 Year');
-                    }).catch(err => {
-                      callback(null, '3 Year')
-                    })
-                },
-                function (policy, callback) {
-                  console.log("check 6 Year")
-                  userAPIClient.folders.getMetadata(result[count].id, appjs.adminAPIClient.metadata.scopes.ENTERPRISE, 'retentionExistingContent')
-                    .then(metadata => {
-                      callback(null, '6 Year');
-                    }).catch(err => {
-                      callback(null, policy) // pass-thru
-                    })
-                }
-              ], function (err, policy) {
-                result[count].policy = policy;
-                count++;
-                console.log("loop: " + count)
-                loopCallback(null, count, result)
-              });
-
-            },
-            function (err, count, result) {
-               
-                res.render('retension', {
-                  error: err,
-                  errorDetails: util.inspect(err),
-                  folders: result
-                });
-            }
-          );*/
+          
           res.render('retention', {
             error: err,
             errorDetails: util.inspect(err),
@@ -162,7 +111,7 @@ router.get('/updateretention', ensureAuthenticated, (req, res) => {
 
   var folder_name = req.body.folder_name;
   var co_owner1 = req.body.co_owner1;
-  res.redirect("/retension");
+  res.redirect("/retention");
 });
 
 
