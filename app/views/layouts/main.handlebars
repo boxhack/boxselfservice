@@ -139,6 +139,8 @@
     $("#inactiveusers tbody").on("click", ".info-button", function () {
       var id = $(this).attr('data-whatever');
 
+      
+
       $.ajax({
         url: 'inactiveuserinfo',
         type: 'GET',
@@ -303,6 +305,9 @@
 
     $("#example tbody").on("click", ".info-button", function () {
       var id = $(this).attr('data-whatever');
+
+      $('.modal-title').text("...")
+      $('.modal-body').text("...")
 
       $.ajax({
         url: 'retentioninfo',
