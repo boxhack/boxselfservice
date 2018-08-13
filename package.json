@@ -27,7 +27,8 @@
     "passport": "^0.2.1",
     "passport-box": ">= 2.0.0",
     "serve-favicon": "^2.3.0",
-    "tedious": "^2.0.0"
+    "tedious": "^2.0.0",
+    "async": "1.5.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
