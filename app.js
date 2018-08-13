@@ -1,3 +1,5 @@
+const config = require('./config/config');
+
 var express = require('express'),
   exphbs = require('express-handlebars'),
   session = require('express-session'),
@@ -7,9 +9,11 @@ var express = require('express'),
   multipart = require('express-formidable').parse,
   bodyParser = require('body-parser'),
   BoxSDK = require('box-node-sdk'),
-  config = require('./config/config'),
+  
   logger = require('morgan'),
   async = require('async');
+
+  
 
 
 console.log('host: ' + config.env);
