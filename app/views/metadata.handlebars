@@ -18,13 +18,14 @@
       <th>Name</th>
       <th># of Visible Attributes</th>
       <th>Status</th>
+      <th>Template Key</th>
     </tr>
     </thead>
     <tbody>
     {{#each templates as | template |}}
       <tr>
-        <td>{{template.displayName}}</td>
-        <td>{{template.fields.length}}</td>
+        <td><a href="template?id={{template.templateKey}}">{{template.displayName}}</a></td>
+        <td>{{template.visibleFields}}</td>
         
         <td>
           {{#if template.hidden}}
@@ -33,6 +34,7 @@
           Hidden
           {{/if}}
           </td>
+          <td>{{template.templateKey}}</td>
       </tr>
     {{/each}}
     </tbody>

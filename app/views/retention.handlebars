@@ -22,10 +22,9 @@
     <tbody>
     {{#each folders as |folder|}}
       <tr>
-        <td>{{folder.name}}</td>
+        <td><a href="/retention/{{folder.id}}">{{folder.name}}</a></td>
         <td>{{folder.id}}</td>
         <td><span class="glyphicon glyphicon-folder-close"></span></td>
-        <!--<td>{{folder.owned_by.login}}</td>-->
         <td> 
           <button type="button" class="btn btn-primary btn-default info-button" data-toggle="modal" data-target="#myModal" data-whatever="{{folder.id}}">Retention</button>
 

@@ -1,0 +1,107 @@
+{{#if error}}
+<div class="alert alert-danger" role="alert">
+  <strong>{{error}}</strong>
+  {{#if errorDetails}}
+  <div>{{errorDetails}}</div>
+  {{/if}}
+</div>
+{{/if}}
+
+
+<div class="row">
+  <div class="col-md-4">
+    <input class="form-control" type="text" name="name" value="{{template.displayName}}">
+  </div>
+  <div class="float-md-right">
+    <!--<button id="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>-->
+    <a href="/metadata" class="btn btn-default">Cancel</a>
+    <button id="save" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+  </div>
+</div>
+
+<div class="row" style="padding-top:20px">
+  <div class="col-md-4" style="margin-top:20px">
+    <label>Status </label>
+    <select id="status">
+      {{#if template.hidden}}
+      <option value="visible" selected>Visible</option>
+      <option value="hidden">Hidden</option>
+      {{else}}
+      <option value="visible">Visible</option>
+      <option value="hidden" selected>Hidden</option>
+      {{/if}}
+    </select>
+  </div>
+</div>
+
+<div class="row" style="padding-top:20px">
+  <div id="accordion">
+    {{#each template.fields as |field|}}
+    <div class="card" style="width: 70rem;">
+      <div class="card-header" id="headingOne">
+        <h5>
+          <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{@index}}" aria-expanded="true" aria-controls="collapseOne">
+            {{field.displayName}} ({{field.type}})
+          </button>
+          <div style="float:right;padding-right:10px;padding-top:10px">
+            {{#if field.hidden}}
+            <a href="#">Make Visible</a>&nbsp;&nbsp; {{else}}
+            <a href="#">Hide</a>&nbsp;&nbsp; {{/if}}
+            <a href="#">Delete</a>
+          </div>
+        </h5>
+      </div>
+      <div id="collapse{{@index}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+        <div class="card-body">
+          <div>
+            <label for="input1" class="col-lg-2 control-label">Format</label>
+            <div class="col-lg-10" style="padding-bottom:10px">
+              <input type="text" class="form-control" id="input1" placeholder="{{field.type}}">
+            </div>
+          </div>
+        {{#if_eq field.type "enum"}}
+          <div>
+            {{#each field.options as |option|}}
+            <label for="input1" class="col-lg-2 control-label">Option</label>
+            <div class="col-lg-10" style="padding-bottom:10px">
+              <input type="text" class="form-control" id="input1" placeholder="{{option.key}}">
+            </div>
+            {{/each}}
+          </div>
+          <div style="padding-bottom:10px">
+            <label for="input1" class="col-lg-2 control-label"></label>
+            <div><span class="glyphicon glyphicon-plus"></span><a href="#"> Add Option</a></div>
+          </div>
+        {{/if_eq}}
+
+        {{#if_eq field.type "multiSelect"}}
+          <div>
+            {{#each field.options as |option|}}
+            <label for="input1" class="col-lg-2 control-label">Option</label>
+            <div class="col-lg-10" style="padding-bottom:10px">
+              <input type="text" class="form-control" id="input1" placeholder="{{option.key}}">
+            </div>
+            {{/each}}
+          </div>
+          <div style="padding-bottom:10px">
+            <label for="input1" class="col-lg-2 control-label"></label>
+            <div><span class="glyphicon glyphicon-plus"></span><a href="#"> Add Option</a></div>
+          </div>
+        {{/if_eq}}
+          <div>
+            <label for="input1" class="col-lg-2 control-label">Description</label>
+            <div class="col-lg-10" style="padding-bottom:10px">
+              <input type="text" class="form-control" id="input1" placeholder="{{field.description}}">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</div>
+
+<div style="padding-top:20px">
+  <span class="glyphicon glyphicon-plus"></span>
+    <a href="#">Add New Attribute</a></div>
+</span>

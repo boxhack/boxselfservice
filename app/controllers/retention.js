@@ -29,6 +29,7 @@ router.post('/retentionupdate', ensureAuthenticated, (req, res) => {
 
 router.get('/retentioninfo', ensureAuthenticated, (req, res) => {
   var folderId = req.query.id;
+  console.log("***: " + folderId)
 
   async.waterfall([
 
@@ -48,9 +49,9 @@ router.get('/retentioninfo', ensureAuthenticated, (req, res) => {
           async.whilst(
               function() { return count < assignments.entries.length; },
               function(callbackLoop) {
-                  
                 appjs.adminAPIClient.retentionPolicies.getAssignment(assignments.entries[count].id)
                 .then(assignment => {
+                  console.log("assigned_to: " + assignment.assigned_to.id)
                   if (assignment.assigned_to.id == folderId) {
                     policy = '10 Year';
                   }
@@ -76,23 +77,59 @@ router.get('/retentioninfo', ensureAuthenticated, (req, res) => {
 
 router.get('/retention', ensureAuthenticated, (req, res) => {
 
+  //var folderId = req.params.folderId;
+  var folderId = '0';
+  console.log("folderId: " + folderId)
+  
+
   appjs.adminAPIClient.enterprise.getUsers({
     filter_term: 'ken.domen.test@nike.com'
   }, (err, data) => {
 
     var userAPIClient = appjs.sdk.getAppAuthClient('user', data.entries[0].id);
 
-    userAPIClient.folders.getItems('0', {
+    userAPIClient.folders.getItems(folderId, {
       fields: 'name,type,id,owned_by'
     }, (err, items) => {
 
       var list = [];
-      getAllItemsForFolderId('0', 0, list, userAPIClient)
+      getAllItemsForFolderId(folderId, 0, list, userAPIClient)
         .then(items => {
           var result = flattenListForFolders(list)
           var count = 0;
 
-          
+          res.render('retention', {
+            error: err,
+            errorDetails: util.inspect(err),
+            folders: result
+          });
+
+        });
+    });
+  });
+});
+
+router.get('/retention/:id', ensureAuthenticated, (req, res) => {
+
+  var folderId = req.params.id;
+  console.log("folderId: " + folderId)
+
+  appjs.adminAPIClient.enterprise.getUsers({
+    filter_term: 'ken.domen.test@nike.com'
+  }, (err, data) => {
+
+    var userAPIClient = appjs.sdk.getAppAuthClient('user', data.entries[0].id);
+
+    userAPIClient.folders.getItems(folderId, {
+      fields: 'name,type,id,owned_by'
+    }, (err, items) => {
+
+      var list = [];
+      getAllItemsForFolderId(folderId, 0, list, userAPIClient)
+        .then(items => {
+          var result = flattenListForFolders(list)
+          var count = 0;
+
           res.render('retention', {
             error: err,
             errorDetails: util.inspect(err),
