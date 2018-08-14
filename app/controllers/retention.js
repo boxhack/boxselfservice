@@ -36,10 +36,10 @@ router.get('/retentioninfo', ensureAuthenticated, (req, res) => {
     function (callback) {
       appjs.adminAPIClient.folders.get(folderId)
         .then(folder => {
-          callback(null, folder.name, folder.owned_by)
+          callback(null, folder.name, folder.owned_by, folder.path_collection)
         })
     },
-    function (name, owner, callback) {
+    function (name, owner, path_collection, callback) {
       appjs.adminAPIClient.retentionPolicies
         .getAssignments("1075449", {type: "folder"})
         .then(assignments => {
@@ -49,12 +49,22 @@ router.get('/retentioninfo', ensureAuthenticated, (req, res) => {
           async.whilst(
               function() { return count < assignments.entries.length; },
               function(callbackLoop) {
+
                 appjs.adminAPIClient.retentionPolicies.getAssignment(assignments.entries[count].id)
                 .then(assignment => {
                   console.log("assigned_to: " + assignment.assigned_to.id)
+                  
+                  // check if assignment exists on folder
                   if (assignment.assigned_to.id == folderId) {
                     policy = '10 Year';
                   }
+                  
+                  // check if assignment exists on parent folders
+                  path_collection.entries.forEach(path => {
+                    if (assignment.assigned_to.id == path.id) {
+                      policy = '10 Year';
+                    }
+                  });
                   count++;
                   callbackLoop(null, name, owner, policy, count)
                 });
@@ -89,7 +99,7 @@ router.get('/retention', ensureAuthenticated, (req, res) => {
     var userAPIClient = appjs.sdk.getAppAuthClient('user', data.entries[0].id);
 
     userAPIClient.folders.getItems(folderId, {
-      fields: 'name,type,id,owned_by'
+      fields: 'name,type,id,owned_by, item_collection, path_collection'
     }, (err, items) => {
 
       var list = [];
