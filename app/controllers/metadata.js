@@ -21,6 +21,34 @@ router.get('/template', ensureAuthenticated, (req, res) => {
   getTemplate(req, res)
 });
 
+router.get('/createtemplate', ensureAuthenticated, (req, res) => {
+  res.render('createtemplate');
+});
+
+router.post('/savetemplate', ensureAuthenticated, (req, res) => {
+  var name = req.body.name;
+  var templateKey = req.body.templateKey;
+  var status = req.body.status == "hidden" ? true : false;
+ 
+
+  appjs.adminAPIClient.metadata.createTemplate(
+    name, 
+    [
+      {
+        type: req.body.paramFormat,
+        key: req.body.paramKey,
+        displayName: req.body.paramName
+      }
+    ], 
+    {hidden: status, templateKey: templateKey})
+  .then(template => {
+    res.json({success: true});
+  }).catch(err => {
+    console.log(err)
+  })
+})
+
+
 
 
 function getAllTemplates(req, res) {

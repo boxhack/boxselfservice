@@ -41,9 +41,10 @@ router.get('/retentioninfo', ensureAuthenticated, (req, res) => {
     },
     function (name, owner, path_collection, callback) {
       appjs.adminAPIClient.retentionPolicies
-        .getAssignments("1075449", {type: "folder"})
+        .getAssignments("1075449", {type: "folder"})  // 10 year policy
         .then(assignments => {
-          var policy = '3 Year'
+
+          var policy = '3 Year';    // default enterprise policy on folder
           var count = 0;
  
           async.whilst(
@@ -52,19 +53,19 @@ router.get('/retentioninfo', ensureAuthenticated, (req, res) => {
 
                 appjs.adminAPIClient.retentionPolicies.getAssignment(assignments.entries[count].id)
                 .then(assignment => {
-                  console.log("assigned_to: " + assignment.assigned_to.id)
                   
                   // check if assignment exists on folder
                   if (assignment.assigned_to.id == folderId) {
                     policy = '10 Year';
                   }
                   
-                  // check if assignment exists on parent folders
+                  // check if assignment exists on parent folder paths
                   path_collection.entries.forEach(path => {
                     if (assignment.assigned_to.id == path.id) {
                       policy = '10 Year';
                     }
                   });
+
                   count++;
                   callbackLoop(null, name, owner, policy, count)
                 });

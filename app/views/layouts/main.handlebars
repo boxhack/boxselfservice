@@ -17,9 +17,9 @@
   <!--<link href="css/bootstrap.css" rel="stylesheet">-->
   <!-- Latest compiled and minified JavaScript -->
   <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 
 
   <style>
@@ -181,9 +181,9 @@
         data: { id: id },
         success: function (json) {
           $('.modal-title').text(json["name"])
-          var html = "<label>Policy:</label> " + json["policy"] + "</br>" + 
-          "<label>Owner:</label> " + json["owner"]["login"] + "</br>" + 
-          "<label>Folder ID:</label> " + id + "</br>";
+          var html = "<label>Policy:</label> " + json["policy"] + "</br>" +
+            "<label>Owner:</label> " + json["owner"]["login"] + "</br>" +
+            "<label>Folder ID:</label> " + id + "</br>";
           $('.modal-body').html(html)
           $('#folderId').val(id);
         },
@@ -196,12 +196,12 @@
     $("#updateTo10").on("click", function () {
       console.log("save clicked: " + $("#folderId").val())
 
-       $.ajax({
+      $.ajax({
         url: 'retentionupdate',
         type: 'POST',
         data: { id: $("#folderId").val() },
         success: function (json) {
-          
+
           console.log(json)
         },
         error: function (e) {
@@ -211,12 +211,65 @@
     });
 
     $("#save").on("click", function () {
-     //alert($("#status").selected());
-     var e = document.getElementById("status");
-    var value = e.options[e.selectedIndex].value;
-  alert(value)
+      var e = document.getElementById("status");
+      var value = e.options[e.selectedIndex].value;
+      alert(value)
     })
 
+
+    $("#createTemplate").on("click", function () {
+      console.log("-------------- createTemplate -----------")
+      var templateName = $('#templateName').val();
+      console.log("templateName: %s", templateName)
+
+
+      var e = document.getElementById("status");
+      var status = e.options[e.selectedIndex].value;
+      console.log("status: %s", status)
+
+      //-----------------------------------------
+      // #1 simple case - get one accordion values
+      //-----------------------------------------
+      var accordionInputs = $("#accordion :input");
+      
+      
+      /** ignore for now
+      var data = {
+        type: $("#accordion :input")[2].value,
+        key: $("#accordion :input")[1].value.trim().toLowerCase(),
+        displayName: $("#accordion :input")[1].value,
+        description: $("#accordion :input")[3].value
+      }
+
+      var params = [];
+      params.push(data);
+      console.log("params: " + params)
+      */
+
+      $.ajax({
+        url: 'savetemplate',
+        type: 'POST',
+        data: {
+            name: templateName,
+            templateKey: templateName.trim().toLowerCase(),
+            status: status,
+            paramName: $("#accordion :input")[1].value,
+            paramKey: $("#accordion :input")[1].value.trim().toLowerCase(),
+            paramDescription: $("#accordion :input")[3].value,
+            paramFormat: $("#accordion :input")[2].value
+        },
+        success: function (json) {
+          console.log(json)
+          // 
+        },
+        error: function (e) {
+          //console.log("error: " + e);
+        }
+      });
+
+
+
+    })
 
   </script>
 
