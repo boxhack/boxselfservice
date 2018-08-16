@@ -33,14 +33,15 @@
   </div>
 </div>
 
+
 <div class="row" style="padding-top:20px">
   <div id="accordion">
-    {{#each template.fields as |field|}}
+  {{#each template.fields as |field|}}
     <div class="card" style="width: 70rem;">
       <div class="card-header" id="headingOne">
         <h5>
           <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{@index}}" aria-expanded="true" aria-controls="collapseOne">
-            {{field.displayName}} ({{field.type}})
+            {{field.displayName}} ({{convertFormat field.type}})
           </button>
           <div style="float:right;padding-right:10px;padding-top:10px">
             {{#if field.hidden}}
@@ -55,7 +56,7 @@
           <div>
             <label for="input1" class="col-lg-2 control-label">Format</label>
             <div class="col-lg-10" style="padding-bottom:10px">
-              <input type="text" class="form-control" id="input1" placeholder="{{field.type}}">
+              <input type="text" class="form-control" id="input1" placeholder="{{convertFormat field.type}}">
             </div>
           </div>
         {{#if_eq field.type "enum"}}

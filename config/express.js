@@ -45,6 +45,18 @@ module.exports = function (app, config) {
           return opts.fn(this);
         else
           return opts.inverse(this);
+      },
+      convertFormat: function (object) {
+        if (object == "string")
+          return "Text";
+        else if (object == "float")
+          return "Number";
+          else if (object == "date")
+            return "Date";
+            else if (object == "enum")
+            return "Dropdown - Single Select"
+            else if (object == "multiSelect")
+            return "Dropdown - Multiple Select"
       }
     }
   }));
