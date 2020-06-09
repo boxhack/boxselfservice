@@ -86,24 +86,10 @@ app.get('/', (req, res) => {
 })
 
 app.get('/auth/box', (req, res) => {
-  var ADEmail = req.headers['x-ms-client-principal-name'] // New!  Eliminate double logging
-
-  console.log('===================================')
-  console.log('ADEmail: ' + ADEmail)
-  console.log('===================================')
-
-  if (typeof ADEmail !== 'undefined') {
-    req.session.email = ADEmail.toLocaleLowerCase()
-    res.locals.email = ADEmail.toLocaleLowerCase()
-    checkAccessLevel(user, email, req, res)
-  } else if (config.env == 'dev') {
     req.session.email = 'ken.domen.boxdev@nike.com'
     res.locals.email = 'ken.domen.boxdev@nike.com'
-
     var email = 'ken.domen.boxdev@nike.com'
-
     checkAccessLevel(null, email, req, res)
-  }
 })
 
 function checkAccessLevel (user, email, req, res) {
