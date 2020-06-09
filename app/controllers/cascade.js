@@ -6,6 +6,7 @@ var Request = require('tedious').Request
 var util = require('util')
 const async = require('async')
 
+
 module.exports = (app) => {
   app.use('/', router)
 };
@@ -18,8 +19,16 @@ var TEMPLATE = 'folderretention'
 router.post('/cascadeupdate', ensureAuthenticated, (req, res) => {
   console.log("folderId: " + req.body.id)
 
-   // TODO: implement using functions below
-   res.json({ success: 'ok' })
+   async.waterfall([
+    async.apply(getUserClient, appjs.adminAPIClient, EMAIL, req.body.id, 100),
+    getOrCreateCascadePolicy,
+    //getOrCreateMetadataValue,
+    force
+  ], 
+  function (err, userClient, folderId, value, policyId) {
+      console.log('%s %s %s', folderId, value, policyId)
+      res.json({ success: 'yes' })
+  })
   
 })
 
@@ -29,7 +38,7 @@ function getUserClient (adminAPIClient, email, folderId, value, callback) {
     filter_term: email
   }, function (err, users) {
     console.log(err)
-    var userClient = sdk.getAppAuthClient('user', users.entries[0].id)
+    var userClient = appjs.sdk.getAppAuthClient('user', users.entries[0].id)
     callback(null, userClient, folderId, value)
   })
 }
@@ -148,7 +157,7 @@ router.get('/cascadeinfo', ensureAuthenticated, (req, res) => {
             console.log('found cascade policy...')
             policyID = cascadePolicies.entries[0].id
             
-            callback(null, name, fonwer, policyID)
+            callback(null, name, owner, policyID)
           } 
           else {
             callback(null, name, owner,  'no policy')
