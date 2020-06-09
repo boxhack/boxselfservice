@@ -22,7 +22,7 @@
     "express-handlebars": "^3.0.0",
     "express-session": "^1.13.0",
     "glob": "^6.0.4",
-    "method-override": "^2.3.0",
+    "method-override": "^2.3.10",
     "moment": "^2.4.0",
     "morgan": "^1.6.1",
     "passport": "^0.2.1",
