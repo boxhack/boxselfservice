@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Box Self-Service App</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
-    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+    integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css">
 
@@ -17,7 +17,8 @@
   <!--<link href="css/bootstrap.css" rel="stylesheet">-->
   <!-- Latest compiled and minified JavaScript -->
   <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 
@@ -43,6 +44,7 @@
       0% {
         transform: rotate(0deg);
       }
+
       100% {
         transform: rotate(360deg);
       }
@@ -81,9 +83,10 @@
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+  <script src="https://code.jquery.com/jquery-2.2.3.min.js"
+    integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+    integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
     crossorigin="anonymous"></script>
   <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"> </script>
   <script src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"> </script>
@@ -97,21 +100,25 @@
 
   <script>
 
-    $('#retention').DataTable();
+    $('#retention').DataTable({
+      order: [1, 'asc']
+    });
 
     $('#metadata').DataTable({
-      order: [0, 'desc']
+      order: [1, 'asc']
     });
 
 
-    $(document).ready(function () {
+    $(document).ready(function ()
+    {
 
       var scroll = false;
       var launcherMaxHeight = 396;
       var launcherMinHeight = 296;
 
       // Mousewheel event handler to detect whether user has scrolled over the container
-      $('.apps').bind('mousewheel', function (e) {
+      $('.apps').bind('mousewheel', function (e)
+      {
         if (e.originalEvent.wheelDelta / 120 > 0) {
           // <a href="http://www.jqueryscript.net/tags.php?/Scroll/">Scroll</a>ing up
         }
@@ -127,7 +134,8 @@
       });
 
       // Scroll event to detect that scrollbar reached top of the container
-      $('.apps').scroll(function () {
+      $('.apps').scroll(function ()
+      {
         var pos = $(this).scrollTop();
         if (pos == 0) {
           scroll = false;
@@ -137,37 +145,43 @@
       });
 
       // Click event handler to show more apps
-      $('.apps .more').click(function () {
+      $('.apps .more').click(function ()
+      {
         $(".second-set").show();
         $(".apps").animate({ scrollTop: $('.apps')[0].scrollHeight }).css({ height: 500 }).addClass('overflow');
       });
 
       // Click event handler to toggle dropdown
-      $(".button").click(function (event) {
+      $(".button").click(function (event)
+      {
         event.stopPropagation();
         $(".app-launcher").toggle();
       });
 
-      $(document).click(function () {
+      $(document).click(function ()
+      {
         //Hide the launcher if visible
         $('.app-launcher').hide();
       });
 
       // Prevent hiding on click inside app launcher
-      $('.app-launcher').click(function (event) {
+      $('.app-launcher').click(function (event)
+      {
         event.stopPropagation();
       });
 
     });
 
     // Resize event handler to maintain the max-height of the app launcher
-    $(window).resize(function () {
+    $(window).resize(function ()
+    {
       $('.apps').css({ maxHeight: $(window).height() - $('.apps').offset().top });
     });
 
     $('.app-launcher').hide();
 
-    $("#retention tbody").on("click", ".info-button", function () {
+    $("#retention tbody").on("click", ".info-button", function ()
+    {
       var id = $(this).attr('data-whatever');
 
       $('.modal-title').text("...")
@@ -179,7 +193,8 @@
         url: '/retentioninfo',
         type: 'GET',
         data: { id: id },
-        success: function (json) {
+        success: function (json)
+        {
           $('.modal-title').text(json["name"])
           var html = "<label>Policy:</label> " + json["policy"] + "</br>" +
             "<label>Owner:</label> " + json["owner"]["login"] + "</br>" +
@@ -187,37 +202,141 @@
           $('.modal-body').html(html)
           $('#folderId').val(id);
         },
-        error: function (e) {
+        error: function (e)
+        {
           alert("error: " + e);
         }
       });
     });
 
-    $("#updateTo10").on("click", function () {
+    $("#updateTo10").on("click", function ()
+    {
       console.log("save clicked: " + $("#folderId").val())
 
       $.ajax({
         url: 'retentionupdate',
         type: 'POST',
         data: { id: $("#folderId").val() },
-        success: function (json) {
-
+        success: function (json)
+        {
           console.log(json)
         },
-        error: function (e) {
+        error: function (e)
+        {
           alert("error: " + e);
         }
       });
     });
 
-    $("#save").on("click", function () {
+
+    $("#metadata tbody").on("click", ".info-button", function ()
+    {
+      var id = $(this).attr('data-whatever');
+
+      $('.modal-title').text("...")
+      $('.modal-body').text("...")
+
+      console.log("retentioninfo folderId: " + id);
+
+      $.ajax({
+        url: '/cascadeinfo',
+        type: 'GET',
+        data: { id: id },
+        success: function (json)
+        {
+          $('.modal-title').text(json["name"])
+          var html = "<label>Policy:</label> " + json["policy"] + "</br>" +
+            "<label>Owner:</label> " + json["owner"]["login"] + "</br>" +
+            "<label>Folder ID:</label> " + id + "</br>";
+          $('.modal-body').html(html)
+          $('#folderId').val(id);
+        },
+        error: function (e)
+        {
+          alert("error: " + e);
+        }
+      });
+    });
+
+    $("#updateTemplate").on("click", function ()
+    {
+      console.log("save clicked: " + $("#folderId").val())
+
+      $.ajax({
+        url: 'retentionupdate',
+        type: 'POST',
+        data: { id: $("#folderId").val() },
+        success: function (json)
+        {
+          console.log(json)
+        },
+        error: function (e)
+        {
+          alert("error: " + e);
+        }
+      });
+    });
+
+
+
+    $("#cascade tbody").on("click", ".info-button", function ()
+    {
+      var id = $(this).attr('data-whatever');
+
+      $('.modal-title').text("...")
+      $('.modal-body').text("...")
+
+      console.log("cascade folderId: " + id);
+
+      $.ajax({
+        url: '/cascadeinfo',
+        type: 'GET',
+        data: { id: id },
+        success: function (json)
+        {
+          $('.modal-title').text(json["name"])
+          var html = "<label>Policy:</label> " + json["policy"] + "</br>" +
+            "<label>Owner:</label> " + json["owner"]["login"] + "</br>" +
+            "<label>Folder ID:</label> " + id + "</br>";
+          $('.modal-body').html(html)
+          $('#folderId').val(id);
+        },
+        error: function (e)
+        {
+          alert("error: " + e);
+        }
+      });
+    });
+
+    $("#updateTemlate").on("click", function ()
+    {
+      console.log("save clicked: " + $("#folderId").val())
+
+      $.ajax({
+        url: 'cascadeupdate',
+        type: 'POST',
+        data: { id: $("#folderId").val() },
+        success: function (json)
+        {
+          console.log(json)
+        },
+        error: function (e)
+        {
+          alert("error: " + e);
+        }
+      });
+    });
+
+    $("#save").on("click", function ()
+    {
       var e = document.getElementById("status");
       var value = e.options[e.selectedIndex].value;
       alert(value)
     })
 
 
-    $("#createTemplate").on("click", function () {
+    $("#createTemplate").on("click", function ()
+    {
       console.log("-------------- createTemplate -----------")
       var templateName = $('#templateName').val();
       console.log("templateName: %s", templateName)
@@ -231,8 +350,7 @@
       // #1 simple case - get one accordion values
       //-----------------------------------------
       var accordionInputs = $("#accordion :input");
-      
-      
+
       /** ignore for now
       var data = {
         type: $("#accordion :input")[2].value,
@@ -250,19 +368,21 @@
         url: 'savetemplate',
         type: 'POST',
         data: {
-            name: templateName,
-            templateKey: templateName.trim().toLowerCase(),
-            status: status,
-            paramName: $("#accordion :input")[1].value,
-            paramKey: $("#accordion :input")[1].value.trim().toLowerCase(),
-            paramDescription: $("#accordion :input")[3].value,
-            paramFormat: $("#accordion :input")[2].value
+          name: templateName,
+          templateKey: templateName.trim().toLowerCase(),
+          status: status,
+          paramName: $("#accordion :input")[1].value,
+          paramKey: $("#accordion :input")[1].value.trim().toLowerCase(),
+          paramDescription: $("#accordion :input")[3].value,
+          paramFormat: $("#accordion :input")[2].value
         },
-        success: function (json) {
+        success: function (json)
+        {
           console.log(json)
           // 
         },
-        error: function (e) {
+        error: function (e)
+        {
           //console.log("error: " + e);
         }
       });

@@ -9,13 +9,13 @@
 
 <div style="margin-bottom:30px"><h2>Apply Cascading Metadata</h2></div>
 <div>
-  <table id="retention" class="display" cellspacing="0" width="100%">
+  <table id="metadata" class="display" cellspacing="0" width="100%">
     <thead>
     <tr>
       <th>Name</th>
       <th>ID</th>
       <th>Type</th>
-      <!--<th>Owner</th>-->
+
       <th>Template</th>
       <th>Set Values</th>
     </tr>
@@ -27,7 +27,7 @@
         <td>{{folder.id}}</td>
         <td><span class="glyphicon glyphicon-folder-close"></span></td>
         <td> 
-          <button type="button" class="btn btn-primary btn-default info-button" data-toggle="modal" data-target="#myModal" data-whatever="{{folder.id}}">Apply Template</button>
+          <button type="button" class="btn btn-primary btn-default info-button" data-toggle="modal" data-target="#myModal" data-whatever="{{folder.id}}"> Template</button>
 
            <!-- Modal -->
           <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -43,7 +43,7 @@
                 <div class="modal-footer">
                   <input id="folderId" type="hidden" value="set"/>
                   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  <button id="updateTo10" type="button" class="btn btn-primary" data-dismiss="modal">Update to 10 Year</button>
+                  <button id="updateTo10" type="button" class="btn btn-primary" data-dismiss="modal">Apply Template</button>
                 </div>
               </div>
             </div>

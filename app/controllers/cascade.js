@@ -10,8 +10,100 @@ module.exports = (app) => {
   app.use('/', router)
 };
 
+
+router.post('/cascadeupdate', ensureAuthenticated, (req, res) => {
+  console.log("folderId: " + req.body.id)
+  
+  /** 
+  appjs.adminAPIClient.retentionPolicies
+    .assign('1075449', 'folder', req.body.id)
+    .then(assignment => {
+      console.log(assignment)
+      res.json({ success: 'yes' })
+    })
+    .catch(err => {
+      console.log(err)
+      res.json({ success: 'no' })
+    })*/
+
+    async.waterfall([
+      async.apply(getUserClient, adminAPIClient, EMAIL, element, 100),
+      getOrCreateCascadePolicy,
+      getOrCreateMetadataValue,
+      force
+    ], function (err, userClient, folderId, value, policyId) {
+      console.log(err)
+      console.log('%s %s %s', folderId, value, policyId)
+    })
+})
+
+
+function getUserClient (adminAPIClient, email, folderId, value, callback) {
+  adminAPIClient.enterprise.getUsers({
+    filter_term: email
+  }, function (err, users) {
+    console.log(err)
+    var userClient = sdk.getAppAuthClient('user', users.entries[0].id)
+    callback(null, userClient, folderId, value)
+  })
+}
+
+function getOrCreateCascadePolicy (userClient, folderId, value, callback) {
+  userClient.metadata.getCascadePolicies(folderId)
+    .then(cascadePolicies => {
+      var policyID = null
+      if (cascadePolicies.entries.length > 0) {
+        console.log('found cascade policy...')
+        policyID = cascadePolicies.entries[0].id
+        callback(null, userClient, folderId, value, policyID)
+      } else {
+        userClient.metadata.createCascadePolicy('enterprise', TEMPLATE, folderId)
+          .then(cascadePolicy => {
+            console.log('creating cascadePolicy...')
+            callback(null, userClient, folderId, value, cascadePolicy.id)
+          })
+      }
+    })
+}
+
+function getOrCreateMetadataValue (userClient, folderId, value, policyId, callback) {
+  userClient.folders.getMetadata(folderId, userClient.metadata.scopes.ENTERPRISE, TEMPLATE)
+    .then(metadata => {
+      console.log(metadata)
+      // found so UPDATE
+      var updates = [{
+        op: 'add',
+        path: '/year',
+        value: value
+      }]
+      userClient.folders.updateMetadata(folderId, userClient.metadata.scopes.ENTERPRISE, TEMPLATE, updates)
+        .then(metadata => {
+          callback(null, userClient, folderId, value, policyId)
+        }).catch(err => {
+          console.log(err)
+        })
+    }).catch(err => {
+      console.log(err)
+      var metadataValues = {
+        year: value
+      }
+      userClient.folders.addMetadata(folderId, userClient.metadata.scopes.ENTERPRISE, TEMPLATE, metadataValues)
+        .then(metadata => {
+          callback(null, userClient, folderId, value, policyId)
+        })
+    })
+}
+
+function force (userClient, folderId, value, policyId, callback) {
+  userClient.metadata.forceApplyCascadePolicy(policyId, userClient.metadata.cascadeResolution.OVERWRITE)
+    .then(() => {
+      // application started — no value returned
+      callback(null, userClient, folderId, value, policyId)
+    })
+}
+
 router.get('/cascade', ensureAuthenticated, (req, res) => {
-  // var folderId = req.params.folderId;
+   //var folderId = req.params.folderId;
   var folderId = '0'
   console.log('folderId: ' + folderId)
 
@@ -43,8 +135,8 @@ router.get('/cascade', ensureAuthenticated, (req, res) => {
   })
 })
 
-router.get('/cascade/:id', ensureAuthenticated, (req, res) => {
-  var folderId = req.params.id
+router.get('/cascadeinfo', ensureAuthenticated, (req, res) => {
+  var folderId = req.query.id
   console.log('folderId: ' + folderId)
 
   appjs.adminAPIClient.enterprise.getUsers({
@@ -53,27 +145,62 @@ router.get('/cascade/:id', ensureAuthenticated, (req, res) => {
     if (err) { console.log(err) }
     var userAPIClient = appjs.sdk.getAppAuthClient('user', data.entries[0].id)
 
-    userAPIClient.folders.getItems(folderId, {
-      fields: 'name,type,id,owned_by'
-    }, (err, items) => {
-      if (err) { console.log(err) }
-      var list = []
-      getAllItemsForFolderId(folderId, 0, list, userAPIClient)
-        .then(items => {
-          var result = flattenListForFolders(list)
-          var count = 0
+    async.waterfall([
 
-          res.render('cascade', {
-            error: err,
-            errorDetails: util.inspect(err),
-            folders: result
+      function (callback) {
+        appjs.adminAPIClient.folders.get(folderId)
+          .then(folder => {
+            callback(null, folder.name, folder.owned_by, folder.path_collection)
           })
-        })
+      },
+      function (name, owner, path_collection, callback) {
+        userAPIClient.metadata.getCascadePolicies(folderId)
+
+        .then(cascadePolicies => {
+          var policyID = null
+          if (cascadePolicies.entries.length > 0) {
+            console.log('found cascade policy...')
+            policyID = cascadePolicies.entries[0].id
+            
+            callback(null, name, fonwer, policyID)
+          } 
+          else {
+            callback(null, name, owner,  'no policy')
+          }
+      })
+    }
+    ], function (err, name, owner, policy) {
+      if (err) { console.log(err) }
+      res.json({
+        name: name,
+        owner: owner,
+        policy: policy
+      })
     })
+
   })
+
+
+  
 })
 
-
+function getOrCreateCascadePolicy (userClient, folderId, value, callback) {
+  userClient.metadata.getCascadePolicies(folderId)
+    .then(cascadePolicies => {
+      var policyID = null
+      if (cascadePolicies.entries.length > 0) {
+        console.log('found cascade policy...')
+        policyID = cascadePolicies.entries[0].id
+        callback(null, userClient, folderId, value, policyID)
+      } else {
+        userClient.metadata.createCascadePolicy('enterprise', TEMPLATE, folderId)
+          .then(cascadePolicy => {
+            console.log('creating cascadePolicy...')
+            callback(null, userClient, folderId, value, cascadePolicy.id)
+          })
+      }
+    })
+}
 
 
 router.get('/updateretention', ensureAuthenticated, (req, res) => {
