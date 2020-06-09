@@ -18,26 +18,8 @@ var TEMPLATE = 'folderretention'
 router.post('/cascadeupdate', ensureAuthenticated, (req, res) => {
   console.log("folderId: " + req.body.id)
 
-    async.waterfall([
-      function (callback) {
-        appjs.adminAPIClient.folders.get(folderId)
-          .then(folder => {
-            callback(null, folder.name, folder.owned_by, folder.path_collection)
-          })
-      },
-      // TODO...
-      /** 
-      getOrCreateCascadePolicy,
-      getOrCreateMetadataValue,
-      force*/
-    ], function (err, name, owner, policy) {
-      if (err) { console.log(err) }
-      res.json({
-        name: name,
-        owner: owner,
-        policy: policy
-      })
-    })
+   // TODO: implement using functions below
+   res.json({ success: 'ok' })
   
 })
 
