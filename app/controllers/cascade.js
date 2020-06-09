@@ -11,30 +11,34 @@ module.exports = (app) => {
 };
 
 
+
+var EMAIL = 'ken.domen.boxdev@nike.com'
+var TEMPLATE = 'folderretention'
+
 router.post('/cascadeupdate', ensureAuthenticated, (req, res) => {
   console.log("folderId: " + req.body.id)
-  
-  /** 
-  appjs.adminAPIClient.retentionPolicies
-    .assign('1075449', 'folder', req.body.id)
-    .then(assignment => {
-      console.log(assignment)
-      res.json({ success: 'yes' })
-    })
-    .catch(err => {
-      console.log(err)
-      res.json({ success: 'no' })
-    })*/
 
     async.waterfall([
-      async.apply(getUserClient, adminAPIClient, EMAIL, element, 100),
+      function (callback) {
+        appjs.adminAPIClient.folders.get(folderId)
+          .then(folder => {
+            callback(null, folder.name, folder.owned_by, folder.path_collection)
+          })
+      },
+      // TODO...
+      /** 
       getOrCreateCascadePolicy,
       getOrCreateMetadataValue,
-      force
-    ], function (err, userClient, folderId, value, policyId) {
-      console.log(err)
-      console.log('%s %s %s', folderId, value, policyId)
+      force*/
+    ], function (err, name, owner, policy) {
+      if (err) { console.log(err) }
+      res.json({
+        name: name,
+        owner: owner,
+        policy: policy
+      })
     })
+  
 })
 
 

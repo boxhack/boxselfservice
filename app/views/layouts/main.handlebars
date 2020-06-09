@@ -263,7 +263,7 @@
       console.log("save clicked: " + $("#folderId").val())
 
       $.ajax({
-        url: 'retentionupdate',
+        url: 'cascadeupdate',
         type: 'POST',
         data: { id: $("#folderId").val() },
         success: function (json)
