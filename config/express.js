@@ -40,7 +40,7 @@ module.exports = function (app, config) {
         console.log("yes!");
         return object.hasOwnProperty("created_by");
       },
-      if_eq: function (a, b, opts) {  // https://stackoverflow.com/questions/15088215/handlebars-js-if-block-helper
+      if_eq: function (a, b, opts) { // https://stackoverflow.com/questions/15088215/handlebars-js-if-block-helper
         if (a == b) // Or === depending on your needs
           return opts.fn(this);
         else
@@ -51,12 +51,12 @@ module.exports = function (app, config) {
           return "Text";
         else if (object == "float")
           return "Number";
-          else if (object == "date")
-            return "Date";
-            else if (object == "enum")
-            return "Dropdown - Single Select"
-            else if (object == "multiSelect")
-            return "Dropdown - Multiple Select"
+        else if (object == "date")
+          return "Date";
+        else if (object == "enum")
+          return "Dropdown - Single Select"
+        else if (object == "multiSelect")
+          return "Dropdown - Multiple Select"
       }
     }
   }));
