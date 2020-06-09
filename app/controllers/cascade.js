@@ -37,7 +37,6 @@ function getUserClient (adminAPIClient, email, folderId, value, callback) {
   adminAPIClient.enterprise.getUsers({
     filter_term: email
   }, function (err, users) {
-    console.log(err)
     var userClient = appjs.sdk.getAppAuthClient('user', users.entries[0].id)
     callback(null, userClient, folderId, value)
   })
